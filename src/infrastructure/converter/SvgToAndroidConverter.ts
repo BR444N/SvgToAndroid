@@ -10,7 +10,7 @@ export class SvgToAndroidConverter implements ISvgConverter {
   private transformers: INodeTransformer[];
 
   constructor(customTransformers?: INodeTransformer[]) {
-    // Principio Abierto/Cerrado (O): Podemos inyectar nuevos transformadores sin modificar la clase
+    // Principio Abierto/Cerrado (O): Soporta inyección de transformadores
     this.transformers = customTransformers ?? [
       new GroupTransformer(),
       new PathTransformer(),
@@ -37,15 +37,25 @@ export class SvgToAndroidConverter implements ISvgConverter {
       autoMirrored: options?.autoMirrored,
     };
 
-    // Transformar elementos hijos
-    const context: TransformContext = { depth: 1 };
-    const childrenXml: string[] = [];
+    // Heredar estilos iniciales desde el nodo raíz <svg> (ej: fill="none", stroke="currentColor")
+    const rootFill = this.getStyleOrAttr(svgRoot, 'fill');
+    const rootStroke = this.getStyleOrAttr(svgRoot, 'stroke');
+    const rootStrokeWidth = this.getStyleOrAttr(svgRoot, 'stroke-width');
 
+    const context: TransformContext = {
+      depth: 1,
+      inheritedFill: rootFill ?? undefined,
+      inheritedStroke: rootStroke ?? undefined,
+      inheritedStrokeWidth: rootStrokeWidth ?? undefined,
+    };
+
+    // Transformar elementos hijos
+    const childrenXml: string[] = [];
     for (const child of Array.from(svgRoot.children)) {
       childrenXml.push(...this.transformElement(child, context));
     }
 
-    // Cabecera Vector Drawable
+    // Cabecera Vector Drawable según especificación oficial de Android
     const vectorAttrs = [
       'xmlns:android="http://schemas.android.com/apk/res/android"',
       `android:width="${widthDp}dp"`,
@@ -61,9 +71,10 @@ export class SvgToAndroidConverter implements ISvgConverter {
       vectorAttrs.push(`android:autoMirrored="true"`);
     }
 
+    // Formato exacto listo para pegar directamente en Android (.xml) sin comentarios
     const xmlLines = [
-      '<!-- Generated with SVG to Android Vector Drawable Converter -->',
-      `<vector\n    ${vectorAttrs.join('\n    ')}>`,
+      '<?xml version="1.0" encoding="utf-8"?>',
+      `<vector ${vectorAttrs.join('\n    ')}>`,
       ...childrenXml,
       '</vector>',
     ];
@@ -85,4 +96,20 @@ export class SvgToAndroidConverter implements ISvgConverter {
     }
     return [];
   };
+
+  private getStyleOrAttr(element: Element, attrName: string): string | null {
+    const directAttr = element.getAttribute(attrName);
+    if (directAttr !== null && directAttr !== '') {
+      return directAttr;
+    }
+    const style = element.getAttribute('style');
+    if (style) {
+      const regex = new RegExp(`(?:^|;)\\s*${attrName}\\s*:\\s*([^;]+)`, 'i');
+      const match = style.match(regex);
+      if (match) {
+        return match[1].trim();
+      }
+    }
+    return null;
+  }
 }

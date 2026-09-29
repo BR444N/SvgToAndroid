@@ -13,9 +13,9 @@ export class GroupTransformer implements INodeTransformer {
     const indent = '  '.repeat(context.depth);
     const childContext: TransformContext = {
       depth: context.depth + 1,
-      inheritedFill: node.getAttribute('fill') ?? context.inheritedFill,
-      inheritedStroke: node.getAttribute('stroke') ?? context.inheritedStroke,
-      inheritedStrokeWidth: node.getAttribute('stroke-width') ?? context.inheritedStrokeWidth,
+      inheritedFill: this.getStyleOrAttr(node, 'fill') ?? context.inheritedFill,
+      inheritedStroke: this.getStyleOrAttr(node, 'stroke') ?? context.inheritedStroke,
+      inheritedStrokeWidth: this.getStyleOrAttr(node, 'stroke-width') ?? context.inheritedStrokeWidth,
     };
 
     const groupAttrs: string[] = [];
@@ -73,5 +73,21 @@ export class GroupTransformer implements INodeTransformer {
       if (rotateMatch[2]) outAttrs.push(`android:pivotX="${rotateMatch[2]}"`);
       if (rotateMatch[3]) outAttrs.push(`android:pivotY="${rotateMatch[3]}"`);
     }
+  }
+
+  private getStyleOrAttr(element: Element, attrName: string): string | null {
+    const directAttr = element.getAttribute(attrName);
+    if (directAttr !== null && directAttr !== '') {
+      return directAttr;
+    }
+    const style = element.getAttribute('style');
+    if (style) {
+      const regex = new RegExp(`(?:^|;)\\s*${attrName}\\s*:\\s*([^;]+)`, 'i');
+      const match = style.match(regex);
+      if (match) {
+        return match[1].trim();
+      }
+    }
+    return null;
   }
 }

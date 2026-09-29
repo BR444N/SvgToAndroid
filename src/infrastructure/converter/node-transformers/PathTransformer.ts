@@ -13,54 +13,78 @@ export class PathTransformer implements INodeTransformer {
     const indent = '  '.repeat(context.depth);
     const attrs: string[] = [];
 
-    // pathData obligatorio
+    // 1. pathData obligatorio en Android Vector
     attrs.push(`android:pathData="${this.escapeXml(pathData)}"`);
 
-    // fill y fill-opacity
-    const fillAttr = node.getAttribute('fill') ?? context.inheritedFill ?? '#000000';
-    const fillColor = ColorUtils.normalizeColor(fillAttr);
-    if (fillColor) {
-      attrs.push(`android:fillColor="${fillColor}"`);
+    // 2. Extracción de stroke (atributos o inline style)
+    const strokeVal = this.getStyleOrAttr(node, 'stroke') ?? context.inheritedStroke;
+    const isStrokeNone = !strokeVal || strokeVal.toLowerCase() === 'none' || strokeVal.toLowerCase() === 'transparent';
+    const strokeColor = !isStrokeNone ? ColorUtils.normalizeColor(strokeVal) : null;
+
+    // 3. Extracción de fill (atributos o inline style)
+    const fillVal = this.getStyleOrAttr(node, 'fill') ?? context.inheritedFill;
+    const isFillNone = fillVal !== undefined && fillVal !== null && (fillVal.toLowerCase() === 'none' || fillVal.toLowerCase() === 'transparent');
+
+    if (!isFillNone) {
+      // Si no es "none", normalizamos el color o usamos negro si no hay stroke
+      const fillColor = fillVal ? ColorUtils.normalizeColor(fillVal) : (!strokeColor ? '#FF000000' : null);
+      if (fillColor) {
+        attrs.push(`android:fillColor="${fillColor}"`);
+      }
+
+      const fillAlpha = this.getStyleOrAttr(node, 'fill-opacity');
+      if (fillAlpha && !isNaN(parseFloat(fillAlpha))) {
+        attrs.push(`android:fillAlpha="${fillAlpha}"`);
+      }
     }
 
-    const fillAlpha = node.getAttribute('fill-opacity');
-    if (fillAlpha && !isNaN(parseFloat(fillAlpha))) {
-      attrs.push(`android:fillAlpha="${fillAlpha}"`);
-    }
-
-    // stroke y stroke-width
-    const strokeAttr = node.getAttribute('stroke') ?? context.inheritedStroke;
-    const strokeColor = ColorUtils.normalizeColor(strokeAttr);
+    // 4. Si tiene stroke configurado
     if (strokeColor) {
       attrs.push(`android:strokeColor="${strokeColor}"`);
 
-      const strokeWidth = node.getAttribute('stroke-width') ?? context.inheritedStrokeWidth ?? '1';
+      const strokeWidth = this.getStyleOrAttr(node, 'stroke-width') ?? context.inheritedStrokeWidth ?? '1';
       attrs.push(`android:strokeWidth="${parseFloat(strokeWidth) || 1}"`);
 
-      const strokeAlpha = node.getAttribute('stroke-opacity');
+      const strokeAlpha = this.getStyleOrAttr(node, 'stroke-opacity');
       if (strokeAlpha) {
         attrs.push(`android:strokeAlpha="${strokeAlpha}"`);
       }
 
-      const strokeLinecap = node.getAttribute('stroke-linecap');
+      const strokeLinecap = this.getStyleOrAttr(node, 'stroke-linecap');
       if (strokeLinecap) {
         attrs.push(`android:strokeLineCap="${strokeLinecap}"`);
       }
 
-      const strokeLinejoin = node.getAttribute('stroke-linejoin');
+      const strokeLinejoin = this.getStyleOrAttr(node, 'stroke-linejoin');
       if (strokeLinejoin) {
         attrs.push(`android:strokeLineJoin="${strokeLinejoin}"`);
       }
     }
 
-    // fill-rule (evenodd / nonzero)
-    const fillRule = node.getAttribute('fill-rule') || node.getAttribute('clip-rule');
+    // 5. Regla de relleno (fill-rule / clip-rule)
+    const fillRule = this.getStyleOrAttr(node, 'fill-rule') || this.getStyleOrAttr(node, 'clip-rule');
     if (fillRule === 'evenodd') {
       attrs.push(`android:fillType="evenOdd"`);
     }
 
     const formattedAttrs = attrs.map((a) => `\n${indent}    ${a}`).join('');
     return [`${indent}<path${formattedAttrs} />`];
+  }
+
+  private getStyleOrAttr(element: Element, attrName: string): string | null {
+    const directAttr = element.getAttribute(attrName);
+    if (directAttr !== null && directAttr !== '') {
+      return directAttr;
+    }
+    const style = element.getAttribute('style');
+    if (style) {
+      const regex = new RegExp(`(?:^|;)\\s*${attrName}\\s*:\\s*([^;]+)`, 'i');
+      const match = style.match(regex);
+      if (match) {
+        return match[1].trim();
+      }
+    }
+    return null;
   }
 
   private escapeXml(unsafe: string): string {
