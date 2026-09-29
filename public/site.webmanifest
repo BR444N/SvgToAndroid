@@ -1,0 +1,17 @@
+{
+  "name": "SVG to Android Vector Converter",
+  "short_name": "SVG2Android",
+  "description": "Herramienta online y segura para convertir archivos SVG a Android Vector Drawable XML al instante.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#000000",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

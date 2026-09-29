@@ -1,0 +1,6 @@
+# Robots.txt for SVG to Android Vector Converter
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://svgtoandroid.dev/sitemap-index.xml

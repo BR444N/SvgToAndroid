@@ -5,6 +5,7 @@ import GlobalActions from '../presentation/components/GlobalActions.astro';
 import Toast from '../presentation/components/Toast.astro';
 import PreviewModal from '../presentation/components/PreviewModal.astro';
 import SpaceBackground from '../presentation/components/SpaceBackground.astro';
+import SEOHead from '../presentation/components/SEOHead.astro';
 import '../presentation/styles/global.css';
 ---
 
@@ -13,9 +14,8 @@ import '../presentation/styles/global.css';
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Conversor minimalista de SVG a Android Vector Drawable XML en el navegador." />
-    <title>SVG to Android Vector</title>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <SEOHead />
   </head>
   <body class="bg-black text-white flex flex-col min-h-screen relative overflow-x-hidden selection:bg-white selection:text-black">
     <!-- Fondo estelar del espacio con dots de 2px y destellos lentos -->
