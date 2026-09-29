@@ -1,0 +1,105 @@
+---
+// PreviewModal.astro: Modal de inspección detallada con zoom (+, -, restablecer) y vista extendida
+---
+<div
+  id="previewModal"
+  class="fixed inset-0 z-50 items-center justify-center p-4 bg-black/85 backdrop-blur-md transition-opacity duration-200 hidden opacity-0"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="modalTitle"
+>
+  <!-- Contenedor del Modal -->
+  <div
+    id="previewModalCard"
+    class="relative w-full max-w-2xl bg-black border border-white/15 rounded-3xl p-5 sm:p-6 shadow-2xl flex flex-col max-h-[90vh] transition-transform duration-200 transform scale-95"
+  >
+    <!-- Encabezado del Modal -->
+    <div class="flex items-center justify-between pb-4 border-b border-white/10 shrink-0">
+      <div class="flex items-center gap-3 min-w-0">
+        <h3 id="modalTitle" class="text-base sm:text-lg font-mono font-semibold text-white truncate max-w-xs sm:max-w-md">
+          Vista Previa
+        </h3>
+        <span id="modalDimensionsBadge" class="text-xs px-2.5 py-0.5 rounded-full bg-white/10 text-white/80 border border-white/10 font-mono shrink-0">
+          24×24 dp
+        </span>
+      </div>
+
+      <!-- Botón Cerrar -->
+      <button
+        id="btnCloseModal"
+        type="button"
+        class="p-2 rounded-full border border-white/10 bg-white/5 hover:bg-white/15 text-white/60 hover:text-white transition-all cursor-pointer"
+        title="Cerrar (Esc)"
+      >
+        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+    </div>
+
+    <!-- Área de Visualización Extendida con Zoom -->
+    <div class="relative my-4 flex-1 min-h-[300px] sm:min-h-[380px] rounded-2xl bg-neutral-950 border border-white/10 overflow-hidden flex items-center justify-center select-none shadow-inner">
+      <!-- Fondo de cuadrícula sutil opcional para contraste visual -->
+      <div class="absolute inset-0 opacity-15 pointer-events-none" style="background-image: radial-gradient(circle, #ffffff 1px, transparent 1px); background-size: 20px 20px;"></div>
+
+      <!-- Contenedor SVG escalable -->
+      <div
+        id="modalSvgWrapper"
+        class="transition-transform duration-150 ease-out flex items-center justify-center max-w-[80%] max-h-[80%] text-white [&>svg]:w-64 [&>svg]:h-64 [&>svg]:max-w-full [&>svg]:max-h-full"
+      >
+      </div>
+    </div>
+
+    <!-- Barra de Controles de Zoom (+, -, 100%, Reset) -->
+    <div class="flex items-center justify-between pt-2 shrink-0">
+      <div class="flex items-center gap-2">
+        <!-- Zoom Out (-) -->
+        <button
+          id="btnZoomOut"
+          type="button"
+          class="p-2 sm:px-3 sm:py-1.5 rounded-full border border-white/10 bg-white/5 hover:bg-white/15 text-white transition-all cursor-pointer flex items-center gap-1 text-xs font-semibold"
+          title="Reducir zoom (-)"
+        >
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M20 12H4" />
+          </svg>
+          <span class="hidden sm:inline">Alejar</span>
+        </button>
+
+        <!-- Indicador de Porcentaje de Zoom -->
+        <span
+          id="zoomPercentBadge"
+          class="px-3 py-1 rounded-full bg-white/10 text-white font-mono text-xs font-medium border border-white/10 min-w-[56px] text-center"
+        >
+          100%
+        </span>
+
+        <!-- Zoom In (+) -->
+        <button
+          id="btnZoomIn"
+          type="button"
+          class="p-2 sm:px-3 sm:py-1.5 rounded-full border border-white/10 bg-white/5 hover:bg-white/15 text-white transition-all cursor-pointer flex items-center gap-1 text-xs font-semibold"
+          title="Aumentar zoom (+)"
+        >
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+          </svg>
+          <span class="hidden sm:inline">Acercar</span>
+        </button>
+      </div>
+
+      <!-- Botón Volver a Modo Normal (Reset) -->
+      <button
+        id="btnResetZoom"
+        type="button"
+        class="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full border border-white/15 bg-white text-black hover:bg-neutral-200 text-xs font-semibold transition-all cursor-pointer shadow-md shadow-white/5"
+        title="Restablecer tamaño normal (100%)"
+      >
+        <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+        </svg>
+        <span>Normal</span>
+      </button>
+    </div>
+  </div>
+</div>

@@ -6,7 +6,7 @@ export function bootstrapApp(): void {
   const presenter = new ConverterAppPresenter();
   const store = AppStateStore.getInstance();
 
-  // Elementos DOM
+  // Elementos DOM principales
   const dropzone = document.getElementById('dropzone');
   const fileInput = document.getElementById('fileInput') as HTMLInputElement | null;
   const filesListContainer = document.getElementById('filesListContainer');
@@ -20,42 +20,175 @@ export function bootstrapApp(): void {
   const errorBadgeContainer = document.getElementById('errorBadgeContainer');
   const progressContainer = document.getElementById('queueProgressContainer');
   const progressBar = document.getElementById('queueProgressBar');
+  const floatingNavbar = document.getElementById('floatingNavbar');
+
+  // Elementos del Modal de Inspección con Zoom
+  const previewModal = document.getElementById('previewModal');
+  const previewModalCard = document.getElementById('previewModalCard');
+  const modalTitle = document.getElementById('modalTitle');
+  const modalDimensionsBadge = document.getElementById('modalDimensionsBadge');
+  const modalSvgWrapper = document.getElementById('modalSvgWrapper');
+  const btnCloseModal = document.getElementById('btnCloseModal');
+  const btnZoomIn = document.getElementById('btnZoomIn');
+  const btnZoomOut = document.getElementById('btnZoomOut');
+  const btnResetZoom = document.getElementById('btnResetZoom');
+  const zoomPercentBadge = document.getElementById('zoomPercentBadge');
 
   if (!dropzone || !fileInput || !filesListContainer) return;
 
-  // 1. Gestión de selección de archivos (Input & Drag and Drop)
+  // ==========================================
+  // 1. Navbar Flotante: Ocultar al desplazarse hacia abajo
+  // ==========================================
+  let lastScrollY = window.scrollY;
+  let ticking = false;
+
+  window.addEventListener('scroll', () => {
+    if (!ticking) {
+      window.requestAnimationFrame(() => {
+        const currentScrollY = window.scrollY;
+
+        if (floatingNavbar) {
+          if (currentScrollY > 70 && currentScrollY > lastScrollY) {
+            // Desplazamiento hacia abajo: ocultar navbar
+            floatingNavbar.classList.add('-translate-y-28', 'opacity-0', 'pointer-events-none');
+            floatingNavbar.classList.remove('translate-y-0', 'opacity-100');
+          } else {
+            // Desplazamiento hacia arriba o cerca del inicio: mostrar navbar
+            floatingNavbar.classList.remove('-translate-y-28', 'opacity-0', 'pointer-events-none');
+            floatingNavbar.classList.add('translate-y-0', 'opacity-100');
+          }
+        }
+
+        lastScrollY = currentScrollY;
+        ticking = false;
+      });
+      ticking = true;
+    }
+  });
+
+  // ==========================================
+  // 2. Lógica del Modal con Zoom (+, -, Reset)
+  // ==========================================
+  let currentZoom = 1.0;
+  const MIN_ZOOM = 0.3;
+  const MAX_ZOOM = 6.0;
+  const ZOOM_STEP = 0.25;
+
+  function updateZoom(newZoom: number): void {
+    currentZoom = Math.min(MAX_ZOOM, Math.max(MIN_ZOOM, parseFloat(newZoom.toFixed(2))));
+    if (modalSvgWrapper) {
+      modalSvgWrapper.style.transform = `scale(${currentZoom})`;
+    }
+    if (zoomPercentBadge) {
+      zoomPercentBadge.textContent = `${Math.round(currentZoom * 100)}%`;
+    }
+  }
+
+  function openPreviewModal(id: string): void {
+    const item = store.getItemById(id);
+    if (!item || !item.svgFile || !item.vectorDrawable || !previewModal) return;
+
+    if (modalTitle) modalTitle.textContent = item.vectorDrawable.fileName;
+    if (modalDimensionsBadge) {
+      modalDimensionsBadge.textContent = `${item.vectorDrawable.options.widthDp}×${item.vectorDrawable.options.heightDp} dp`;
+    }
+    if (modalSvgWrapper) {
+      modalSvgWrapper.innerHTML = item.svgFile.sanitizedContent;
+    }
+
+    updateZoom(1.0); // Inicia en 100% (modo normal)
+
+    previewModal.classList.remove('hidden');
+    requestAnimationFrame(() => {
+      previewModal.classList.remove('opacity-0');
+      previewModalCard?.classList.remove('scale-95');
+      previewModalCard?.classList.add('scale-100');
+    });
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closePreviewModal(): void {
+    if (!previewModal) return;
+    previewModal.classList.add('opacity-0');
+    previewModalCard?.classList.remove('scale-100');
+    previewModalCard?.classList.add('scale-95');
+
+    setTimeout(() => {
+      previewModal.classList.add('hidden');
+      if (modalSvgWrapper) modalSvgWrapper.innerHTML = '';
+      document.body.style.overflow = '';
+    }, 200);
+  }
+
+  // Controles de zoom
+  btnZoomIn?.addEventListener('click', () => updateZoom(currentZoom + ZOOM_STEP));
+  btnZoomOut?.addEventListener('click', () => updateZoom(currentZoom - ZOOM_STEP));
+  btnResetZoom?.addEventListener('click', () => updateZoom(1.0));
+
+  // Zoom con rueda de ratón dentro del modal
+  modalSvgWrapper?.parentElement?.addEventListener('wheel', (e) => {
+    e.preventDefault();
+    if (e.deltaY < 0) {
+      updateZoom(currentZoom + 0.15);
+    } else {
+      updateZoom(currentZoom - 0.15);
+    }
+  }, { passive: false });
+
+  // Cerrar modal
+  btnCloseModal?.addEventListener('click', closePreviewModal);
+
+  previewModal?.addEventListener('click', (e) => {
+    if (e.target === previewModal) {
+      closePreviewModal();
+    }
+  });
+
+  window.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && previewModal && !previewModal.classList.contains('hidden')) {
+      closePreviewModal();
+    }
+  });
+
+  // ==========================================
+  // 3. Selección y Procesamiento de Archivos
+  // ==========================================
   dropzone.addEventListener('click', () => fileInput.click());
 
   fileInput.addEventListener('change', () => {
     if (fileInput.files && fileInput.files.length > 0) {
       presenter.handleFiles(fileInput.files);
-      fileInput.value = ''; // Reset para permitir volver a cargar los mismos archivos si se desea
+      fileInput.value = '';
     }
   });
 
   dropzone.addEventListener('dragover', (e) => {
     e.preventDefault();
-    dropzone.classList.add('border-emerald-500', 'bg-slate-900/80');
+    dropzone.classList.add('border-white/50', 'bg-black/80');
   });
 
   dropzone.addEventListener('dragleave', (e) => {
     e.preventDefault();
-    dropzone.classList.remove('border-emerald-500', 'bg-slate-900/80');
+    dropzone.classList.remove('border-white/50', 'bg-black/80');
   });
 
   dropzone.addEventListener('drop', (e) => {
     e.preventDefault();
-    dropzone.classList.remove('border-emerald-500', 'bg-slate-900/80');
+    dropzone.classList.remove('border-white/50', 'bg-black/80');
     if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files.length > 0) {
       presenter.handleFiles(e.dataTransfer.files);
     }
   });
 
-  // 2. Acciones Globales
+  // ==========================================
+  // 4. Acciones Globales
+  // ==========================================
   btnExportZip?.addEventListener('click', () => presenter.handleExportAllZip());
   btnClearAll?.addEventListener('click', () => presenter.handleClearAll());
 
-  // 3. Delegación de eventos en la lista de tarjetas
+  // ==========================================
+  // 5. Delegación de eventos en las tarjetas
+  // ==========================================
   filesListContainer.addEventListener('click', (e) => {
     const target = (e.target as HTMLElement).closest('[data-action]') as HTMLElement | null;
     if (!target) return;
@@ -64,7 +197,9 @@ export function bootstrapApp(): void {
     const id = target.getAttribute('data-id');
     if (!id) return;
 
-    if (action === 'copy') {
+    if (action === 'open-modal') {
+      openPreviewModal(id);
+    } else if (action === 'copy') {
       presenter.handleCopyXml(id);
     } else if (action === 'download') {
       presenter.handleDownloadSingle(id);
@@ -78,7 +213,9 @@ export function bootstrapApp(): void {
     }
   });
 
-  // 4. Suscripción al almacén de estado (Patrón Observer)
+  // ==========================================
+  // 6. Suscripción Reactiva al Store
+  // ==========================================
   store.subscribe((state: AppState) => {
     // Actualizar barra de progreso
     if (state.isProcessing && state.totalInQueue > 0) {

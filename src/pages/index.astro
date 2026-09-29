@@ -3,6 +3,7 @@ import Header from '../presentation/components/Header.astro';
 import Dropzone from '../presentation/components/Dropzone.astro';
 import GlobalActions from '../presentation/components/GlobalActions.astro';
 import Toast from '../presentation/components/Toast.astro';
+import PreviewModal from '../presentation/components/PreviewModal.astro';
 import SpaceBackground from '../presentation/components/SpaceBackground.astro';
 import '../presentation/styles/global.css';
 ---
@@ -68,6 +69,9 @@ import '../presentation/styles/global.css';
 
     <!-- Notificaciones Toast -->
     <Toast />
+
+    <!-- Modal de Inspección con Zoom Extendida -->
+    <PreviewModal />
 
     <!-- Script de Inicialización TypeScript (MVP Presenter) -->
     <script>

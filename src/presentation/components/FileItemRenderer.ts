@@ -62,12 +62,23 @@ export class FileItemRenderer {
         <!-- Fila Principal: Preview Ampliado + Información + Botones de Acción -->
         <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-5">
           <div class="flex items-center gap-5 min-w-0">
-            <!-- Preview Gráfico del Icono MÁS GRANDE (w-20 sm:w-24) -->
-            <div class="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl bg-neutral-950 border border-white/10 p-3 sm:p-3.5 flex items-center justify-center shrink-0 overflow-hidden shadow-inner">
-              <div class="w-full h-full flex items-center justify-center text-white [&>svg]:max-w-full [&>svg]:max-h-full [&>svg]:w-auto [&>svg]:h-auto">
+            <!-- Preview Gráfico Interactivo: Al hacer clic abre la vista extendida con zoom -->
+            <button
+              type="button"
+              data-action="open-modal"
+              data-id="${item.id}"
+              class="group relative w-20 h-20 sm:w-24 sm:h-24 rounded-2xl bg-neutral-950 border border-white/10 hover:border-white/30 p-3 sm:p-3.5 flex items-center justify-center shrink-0 overflow-hidden shadow-inner cursor-zoom-in transition-all duration-200 hover:scale-[1.03] text-left"
+              title="Haz clic para inspeccionar detalles y ampliar con zoom"
+            >
+              <div class="w-full h-full flex items-center justify-center text-white pointer-events-none [&>svg]:max-w-full [&>svg]:max-h-full [&>svg]:w-auto [&>svg]:h-auto">
                 ${svgFile.sanitizedContent}
               </div>
-            </div>
+              <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity rounded-2xl pointer-events-none">
+                <svg class="w-5 h-5 text-white drop-shadow" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v6m3-3H7" />
+                </svg>
+              </div>
+            </button>
 
             <!-- Metadatos del Archivo -->
             <div class="min-w-0">
