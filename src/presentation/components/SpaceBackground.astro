@@ -1,0 +1,130 @@
+---
+// SpaceBackground.astro: Fondo estelar espacial con dots de 2px y destellos (sparkles) parpadeantes lentos y aleatorios
+---
+<canvas
+  id="spaceBackgroundCanvas"
+  class="fixed inset-0 pointer-events-none z-0 w-full h-full"
+  aria-hidden="true"
+></canvas>
+
+<script>
+  interface Star {
+    x: number;
+    y: number;
+    size: number;
+    type: 'dot' | 'sparkle';
+    baseAlpha: number;
+    twinkleSpeed: number; // Velocidad lenta
+    phase: number;
+  }
+
+  function initSpaceBackground(): void {
+    const canvas = document.getElementById('spaceBackgroundCanvas') as HTMLCanvasElement | null;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    let width = (canvas.width = window.innerWidth);
+    let height = (canvas.height = window.innerHeight);
+
+    let stars: Star[] = [];
+
+    // Genera estrellas con separación mínima para evitar aglomeraciones (grid jitter)
+    function generateStars(): void {
+      stars = [];
+      const cellSize = 65; // Separación para que no queden juntos
+      const cols = Math.ceil(width / cellSize);
+      const rows = Math.ceil(height / cellSize);
+
+      for (let c = 0; c < cols; c++) {
+        for (let r = 0; r < rows; r++) {
+          // Probabilidad de tener una estrella en esta celda
+          if (Math.random() > 0.45) continue;
+
+          const x = c * cellSize + Math.random() * (cellSize - 10) + 5;
+          const y = r * cellSize + Math.random() * (cellSize - 10) + 5;
+
+          // 15% son destellos (sparkles), 85% son dots de 2px
+          const isSparkle = Math.random() < 0.18;
+
+          stars.push({
+            x,
+            y,
+            size: isSparkle ? 5 : 2, // dots exactamente de 2px
+            type: isSparkle ? 'sparkle' : 'dot',
+            baseAlpha: 0.15 + Math.random() * 0.4,
+            twinkleSpeed: 0.0006 + Math.random() * 0.0008, // Parpadeo muy lento y suave
+            phase: Math.random() * Math.PI * 2,
+          });
+        }
+      }
+    }
+
+    generateStars();
+
+    window.addEventListener('resize', () => {
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+      generateStars();
+    });
+
+    let lastTime = performance.now();
+
+    function render(currentTime: number): void {
+      if (!ctx) return;
+      const deltaTime = currentTime - lastTime;
+      lastTime = currentTime;
+
+      ctx.clearRect(0, 0, width, height);
+
+      for (const star of stars) {
+        star.phase += star.twinkleSpeed * deltaTime;
+        // Onda sinusoidal suave entre [0.1, 1.0] para el brillo
+        const alpha = Math.max(0.08, Math.min(1.0, star.baseAlpha + Math.sin(star.phase) * 0.45));
+
+        ctx.fillStyle = `rgba(255, 255, 255, ${alpha})`;
+
+        if (star.type === 'dot') {
+          // Dot circular de 2px exactos
+          ctx.beginPath();
+          ctx.arc(star.x, star.y, 1, 0, Math.PI * 2);
+          ctx.fill();
+        } else {
+          // Destello espacial (sparkle de 4 puntas)
+          ctx.save();
+          ctx.translate(star.x, star.y);
+          ctx.strokeStyle = `rgba(255, 255, 255, ${alpha * 0.9})`;
+          ctx.lineWidth = 1;
+
+          // Cruz fina central
+          const s = star.size;
+          ctx.beginPath();
+          ctx.moveTo(-s, 0);
+          ctx.lineTo(s, 0);
+          ctx.moveTo(0, -s);
+          ctx.lineTo(0, s);
+          ctx.stroke();
+
+          // Núcleo brillante
+          ctx.fillStyle = `rgba(255, 255, 255, ${alpha})`;
+          ctx.beginPath();
+          ctx.arc(0, 0, 1, 0, Math.PI * 2);
+          ctx.fill();
+
+          ctx.restore();
+        }
+      }
+
+      requestAnimationFrame(render);
+    }
+
+    requestAnimationFrame(render);
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initSpaceBackground);
+  } else {
+    initSpaceBackground();
+  }
+</script>
