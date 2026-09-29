@@ -7,9 +7,9 @@ interface Props {
 }
 
 const {
-  title = "SVG to Android Vector Converter | Convierte SVG a XML Gratis",
-  description = "Convierte archivos SVG a Android Vector Drawable (.xml) al instante. Herramienta online, segura y 100% en el navegador para Android Studio y Jetpack Compose con vista previa y descarga ZIP.",
-  canonicalUrl = "https://svgtoandroid.dev/",
+  title = "SVG to Android Vector Converter | Convert SVG to XML Online Free",
+  description = "Convert SVG files into Android Vector Drawable (.xml) instantly. Free, secure, 100% client-side tool for Android Studio and Jetpack Compose with interactive preview and ZIP batch download.",
+  canonicalUrl = "https://svg-to-android.vercel.app/",
 } = Astro.props;
 
 const structuredData = {
@@ -26,25 +26,25 @@ const structuredData = {
     "priceCurrency": "USD"
   },
   "featureList": [
-    "Conversión de SVG a Android Vector Drawable XML",
-    "Procesamiento 100% en el navegador sin subir archivos",
-    "Vista previa ampliada con controles de zoom (+, -, restablecer)",
-    "Descarga individual y masiva en formato ZIP",
-    "Copiado de código XML listo para pegar en Android Studio"
+    "Convert SVG to Android Vector Drawable XML",
+    "100% client-side in-browser conversion without file uploads",
+    "Interactive extended preview with zoom controls (+, -, reset)",
+    "Individual and batch ZIP download",
+    "Instant 1-click XML copy ready for Android Studio"
   ]
 };
 ---
 
-<!-- Metadatos Primarios -->
+<!-- Primary Meta Tags -->
 <title>{title}</title>
 <meta name="title" content={title} />
 <meta name="description" content={description} />
-<meta name="keywords" content="svg to android, svg to xml, android vector drawable, vector drawable converter, svg2vectordrawable, jetpack compose icons, convert svg to android xml, svg a vector android, android drawable generator, android studio xml" />
-<meta name="author" content="SVG to Android" />
+<meta name="keywords" content="svg to android, svg to xml, android vector drawable, vector drawable converter, svg2vectordrawable, jetpack compose icons, convert svg to android xml, android drawable generator, android studio xml" />
+<meta name="author" content="BR444N" />
 <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
 <link rel="canonical" href={canonicalUrl} />
 
-<!-- Configuración de Tema y Pantalla Móvil -->
+<!-- Theme & Mobile Settings -->
 <meta name="theme-color" content="#000000" />
 <meta name="color-scheme" content="dark" />
 <link rel="manifest" href="/site.webmanifest" />
@@ -54,17 +54,17 @@ const structuredData = {
 <meta property="og:url" content={canonicalUrl} />
 <meta property="og:title" content={title} />
 <meta property="og:description" content={description} />
-<meta property="og:image" content="https://svgtoandroid.dev/favicon.svg" />
+<meta property="og:image" content="https://svg-to-android.vercel.app/favicon.svg" />
 <meta property="og:site_name" content="SVG to Android Vector Converter" />
-<meta property="og:locale" content="es_ES" />
-<meta property="og:locale:alternate" content="en_US" />
+<meta property="og:locale" content="en_US" />
+<meta property="og:locale:alternate" content="es_ES" />
 
 <!-- Twitter / X -->
 <meta property="twitter:card" content="summary" />
 <meta property="twitter:url" content={canonicalUrl} />
 <meta property="twitter:title" content={title} />
 <meta property="twitter:description" content={description} />
-<meta property="twitter:image" content="https://svgtoandroid.dev/favicon.svg" />
+<meta property="twitter:image" content="https://svg-to-android.vercel.app/favicon.svg" />
 
-<!-- Datos Estructurados JSON-LD (Schema.org para Google Search & Rich Snippets) -->
+<!-- JSON-LD Structured Data (Schema.org) -->
 <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />

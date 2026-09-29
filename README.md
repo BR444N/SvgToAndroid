@@ -5,121 +5,141 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Astro-ffffff.svg?style=for-the-badge&logo=astro&logoColor=black" alt="ASTRO" />
-  <img src="https://img.shields.io/badge/TypeScript-ffffff.svg?style=for-the-badge&logo=typescript&logoColor=black" alt="TYPESCRIPT" />
-  <img src="https://img.shields.io/badge/Tailwind_CSS-ffffff.svg?style=for-the-badge&logo=tailwindcss&logoColor=black" alt="TAILWIND CSS" />
-  <img src="https://img.shields.io/badge/Android_Studio-ffffff.svg?style=for-the-badge&logo=android-studio&logoColor=black" alt="ANDROID STUDIO" />
-  <img src="https://img.shields.io/badge/Jetpack_Compose-ffffff.svg?style=for-the-badge&logo=jetpack-compose&logoColor=black" alt="JETPACK COMPOSE" />
+  <a href="https://svg-to-android.vercel.app" target="_blank" rel="noopener noreferrer">
+    <img src="https://img.shields.io/badge/Website-svg--to--android.vercel.app-ffffff.svg?style=for-the-badge&logo=vercel&logoColor=black" alt="LIVE WEBSITE" />
+  </a>
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/License-MIT-ffffff.svg?style=for-the-badge&logo=open-source-initiative&logoColor=black" alt="LICENSE" />
-  <img src="https://img.shields.io/badge/Package_Manager-pnpm-ffffff.svg?style=for-the-badge&logo=pnpm&logoColor=black" alt="PNPM" />
+  <a href="https://astro.build" target="_blank" rel="noopener noreferrer">
+    <img src="https://img.shields.io/badge/Astro-ffffff.svg?style=for-the-badge&logo=astro&logoColor=black" alt="ASTRO" />
+  </a>
+  <a href="https://www.typescriptlang.org" target="_blank" rel="noopener noreferrer">
+    <img src="https://img.shields.io/badge/TypeScript-ffffff.svg?style=for-the-badge&logo=typescript&logoColor=black" alt="TYPESCRIPT" />
+  </a>
+  <a href="https://tailwindcss.com" target="_blank" rel="noopener noreferrer">
+    <img src="https://img.shields.io/badge/Tailwind_CSS-ffffff.svg?style=for-the-badge&logo=tailwindcss&logoColor=black" alt="TAILWIND CSS" />
+  </a>
+  <a href="https://developer.android.com/jetpack/compose" target="_blank" rel="noopener noreferrer">
+    <img src="https://img.shields.io/badge/Jetpack_Compose-ffffff.svg?style=for-the-badge&logo=jetpack-compose&logoColor=black" alt="JETPACK COMPOSE" />
+  </a>
+</p>
+
+<p align="center">
+  <a href="LICENSE">
+    <img src="https://img.shields.io/badge/License-MIT-ffffff.svg?style=for-the-badge&logo=open-source-initiative&logoColor=black" alt="LICENSE" />
+  </a>
+  <a href="https://pnpm.io" target="_blank" rel="noopener noreferrer">
+    <img src="https://img.shields.io/badge/Package_Manager-pnpm-ffffff.svg?style=for-the-badge&logo=pnpm&logoColor=black" alt="PNPM" />
+  </a>
   <img src="https://img.shields.io/badge/Architecture-Clean_SOLID-ffffff.svg?style=for-the-badge&logo=buffer&logoColor=black" alt="CLEAN ARCHITECTURE" />
 </p>
 
 ---
 
-## 📌 Descripción
+## 📌 Overview
 
-**SVG to Android Vector** es una herramienta web moderna, ultrarrápida y minimalista construida con **Astro** y **TypeScript puro**, diseñada para convertir archivos SVG a **Android Vector Drawable (`.xml`)** directamente en el navegador.
+**SVG to Android Vector** is a modern, ultra-fast, and minimalist web tool built with **Astro** and **vanilla TypeScript**, designed to convert SVG files into **Android Vector Drawable (`.xml`)** directly in the browser.
 
-Optimizado para desarrolladores de Android nativo (XML tradicional) y **Jetpack Compose**, genera código limpio, sin comentarios innecesarios y con la cabecera estándar `<?xml version="1.0" encoding="utf-8"?>`, listo para copiar y pegar en `res/drawable/`.
-
----
-
-## ✨ Características Principales
-
-- **Cero Frameworks Pesados de UI:** Implementado con Astro y TypeScript nativo (sin React, carga instantánea y bundle ultra reducido).
-- **Procesamiento 100% Client-Side:** Tus archivos gráficos nunca se suben a ningún servidor externo. Máxima privacidad, seguridad y funcionamiento offline.
-- **Seguridad en 4 Capas (Detrás de escena):**
-  - Filtro estricto a nivel de navegador (`accept=".svg,image/svg+xml"`).
-  - Verificación de extensión `.svg` y tipo MIME.
-  - Validación de XML bien formado mediante `DOMParser`.
-  - Sanitización profunda contra ataques XSS/XXE (eliminación automática de `<script>`, `<iframe>`, eventos `onload`/`onclick` y URLs con protocolo `javascript:`).
-- **Previsualización Interactiva y Zoom Detallado:** Toca cualquier icono para abrir un modal con controles de zoom (`+`, `-`, rueda del ratón y restablecimiento al 100%).
-- **Copiado en 1 Clic:** Copia el código XML formateado y listo para Android al portapapeles.
-- **Descarga Individual y Masiva en ZIP:** Descarga archivos independientes con nomenclatura válida para Android (`ic_nombre.xml`) o empaqueta todos los vectores en un archivo `.zip`.
-- **Botón de Borrado Rápido:** Descarte instantáneo para flujos de trabajo rápidos de "copiar y listo".
-- **Diseño Espacial Minimalista:** Fondo animado con estrellas de 2px y destellos lentos a 60fps, paleta en negro puro `#000000` con bordes redondeados y barra de navegación flotante con auto-ocultamiento al desplazarse.
+Optimized for native Android development (traditional XML Drawables) and **Jetpack Compose**, it produces clean, ready-to-use XML code starting with the standard `<?xml version="1.0" encoding="utf-8"?>` declaration and without any unnecessary comments, ready to copy and paste straight into your `res/drawable/` directory.
 
 ---
 
-## 🏛️ Arquitectura Limpia (Clean Architecture) & SOLID
+## ✨ Key Features
 
-El proyecto sigue una separación estricta de responsabilidades:
+- **Zero Heavy UI Frameworks:** Built with native TypeScript and Astro (no React overhead, instant rendering, minimal client bundle).
+- **100% Client-Side Processing:** Your vector assets are processed strictly in your browser. Complete privacy, zero external server uploads, and offline capability.
+- **Behind-the-Scenes 4-Layer Security:**
+  - Browser-level input restriction (`accept=".svg,image/svg+xml"`).
+  - File extension and MIME type verification.
+  - Strict XML validation using `DOMParser`.
+  - Deep sanitization stripping executable scripts, `<iframe>`, `onload`/`onclick` events, and `javascript:` URIs.
+- **Interactive Preview with Deep Zoom:** Click any icon preview to open a detailed modal with zoom controls (`+`, `-`, mouse wheel, and 100% reset).
+- **1-Click XML Copy:** Instant copy of the clean Android Vector XML to your clipboard.
+- **Individual & Batch ZIP Downloads:** Download individual XML files formatted with valid Android resource naming (`ic_name.xml`) or package all converted assets into a single `.zip` file.
+- **1-Click Quick Discard:** Remove items immediately if you only need to copy and paste the code.
+- **Minimalist Space Aesthetic:** Procedural 60fps canvas starfield with subtle 2px twinkling dots, pure black `#000000` theme with rounded borders, and an auto-hiding floating navigation bar on scroll.
+
+---
+
+## 🏛️ Clean Architecture & SOLID Principles
+
+The project strictly decouples presentation, domain models, and infrastructure adapters:
 
 ```text
 src/
-├── domain/                      # Entidades del núcleo, errores y contratos
+├── domain/                      # Core business models, entities, and ports
 │   ├── entities/                # SvgFile, VectorDrawable
 │   ├── errors/                  # SvgValidationError
 │   └── ports/                   # Interfaces (ISvgValidator, ISvgConverter, IZipExporter...)
 │
-├── application/                 # Casos de uso (Orquestación del negocio)
+├── application/                 # Use cases (Orchestration)
 │   ├── dtos/                    # ProcessedItemDto
 │   └── use-cases/               # ProcessSingleSvgFile, ExportAllAsZip, CopyXmlToClipboard...
 │
-├── infrastructure/              # Implementaciones concretas y adaptadores
+├── infrastructure/              # Concrete implementations & browser adapters
 │   ├── security/                # StrictSvgValidator, SvgSanitizer
 │   ├── converter/               # SvgToAndroidConverter, ColorUtils
 │   │   └── node-transformers/   # PathTransformer, BasicShapesTransformer, GroupTransformer
 │   └── services/                # BrowserZipExporter, BrowserClipboardService, BrowserDownloadService
 │
-└── presentation/                # Capa de Presentación (Patrón MVP)
+└── presentation/                # Presentation Layer (MVP Pattern)
     ├── components/              # Header, Dropzone, GlobalActions, PreviewModal, Toast, SpaceBackground
     ├── presenters/              # ConverterAppPresenter, AppBootstrap
-    ├── state/                   # AppStateStore (Pub-Sub Reactivo)
+    ├── state/                   # AppStateStore (Reactive Pub-Sub Store)
     └── styles/                  # global.css (Tailwind CSS)
 ```
 
-### Principios SOLID Aplicados:
-- **S (Single Responsibility):** Cada componente, transformador y caso de uso realiza exclusivamente una tarea específica.
-- **O (Open/Closed):** Nuevas etiquetas SVG se incorporan implementando la interfaz `INodeTransformer` sin modificar el motor central.
-- **L (Liskov Substitution):** Todas las implementaciones de puertos (`ISvgValidator`, `ISvgConverter`) son intercambiables.
-- **I (Interface Segregation):** Interfaces pequeñas y específicas para cada capacidad del sistema.
-- **D (Dependency Inversion):** Los casos de uso dependen de abstracciones del dominio, no de implementaciones del navegador ni del DOM.
+### Applied SOLID Principles:
+- **S (Single Responsibility):** Each validator, transformer, and presenter has a single, well-defined task.
+- **O (Open/Closed):** New SVG element support can be added by implementing `INodeTransformer` without modifying core converter logic.
+- **L (Liskov Substitution):** Port implementations (`ISvgValidator`, `ISvgConverter`) can be swapped seamlessly.
+- **I (Interface Segregation):** Granular, targeted interfaces rather than monolithic services.
+- **D (Dependency Inversion):** Use cases depend solely on domain interfaces, never on DOM or browser APIs directly.
 
 ---
 
-## 🛠️ Instalación y Uso Local
+## 🛠️ Local Development & Setup
 
-Este proyecto utiliza **pnpm** como gestor de paquetes.
+This repository uses **pnpm** as its package manager.
 
 ```bash
-# 1. Clonar el repositorio
+# 1. Clone the repository
 git clone https://github.com/BR444N/SvgToAndroid.git
 cd SvgToAndroid
 
-# 2. Instalar dependencias con pnpm
+# 2. Install dependencies with pnpm
 pnpm install
 
-# 3. Iniciar servidor de desarrollo local
+# 3. Start local development server
 pnpm dev
 
-# 4. Ejecutar pruebas unitarias
+# 4. Run automated unit tests
 pnpm test
 
-# 5. Compilar para producción
+# 5. Build for production
 pnpm build
+
+# 6. Preview production build
+pnpm preview
 ```
 
 ---
 
-## 🧪 Pruebas Unitarias
+## 🧪 Automated Unit Tests
 
-El proyecto incluye tests automáticos para asegurar la integridad de:
-- Sanitización de nombres válidos para recursos de Android (`ic_nombre.xml`).
-- Normalización de colores CSS/SVG a formato hexadecimal Android (`#AARRGGBB`).
-- Transformación geométrica de formas básicas (`<rect>`, `<circle>`, `<polygon>`, etc.) a datos de trazado `<path>`.
+Unit tests are included to verify:
+- Android resource filename sanitization (`ic_name.xml`).
+- CSS/SVG color normalization to Android hex (`#AARRGGBB`).
+- Basic geometric shape conversion (`<rect>`, `<circle>`, `<polygon>`, etc.) into `<path>` data.
 
-Para ejecutarlas:
+Run the test suite:
 ```bash
 pnpm test
 ```
 
 ---
 
-## 📄 Licencia
+## 📄 License
 
-Este proyecto está bajo la Licencia **MIT**. Consulta el archivo [LICENSE](LICENSE) para más detalles.
+This project is licensed under the **MIT License**. See the [LICENSE](LICENSE) file for details.

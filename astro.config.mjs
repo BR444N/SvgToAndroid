@@ -4,7 +4,7 @@ import sitemap from '@astrojs/sitemap';
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://svgtoandroid.dev',
+  site: 'https://svg-to-android.vercel.app',
   integrations: [
     tailwind({
       applyBaseStyles: true,

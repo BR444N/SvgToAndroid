@@ -3,4 +3,4 @@ User-agent: *
 Allow: /
 
 # Sitemap
-Sitemap: https://svgtoandroid.dev/sitemap-index.xml
+Sitemap: https://svg-to-android.vercel.app/sitemap-index.xml
