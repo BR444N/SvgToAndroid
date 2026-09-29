@@ -1,0 +1,30 @@
+{
+  "name": "svgtoandroid",
+  "type": "module",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "test": "pnpm dlx tsx src/tests/verify-names.ts && pnpm dlx tsx src/tests/verify-colors.ts && pnpm dlx tsx src/tests/verify-shapes.ts",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "astro": "^5.4.0",
+    "jszip": "^3.10.1"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.4",
+    "@astrojs/tailwind": "^5.1.5",
+    "tailwindcss": "^3.4.17",
+    "typescript": "^5.7.3"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "esbuild",
+      "sharp"
+    ]
+  }
+}
