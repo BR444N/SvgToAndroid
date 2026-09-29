@@ -1,9 +1,9 @@
 ---
-// Toast.astro
+// Toast.astro: Notificaciones emergentes redondeadas en blanco y negro
 ---
 <div
   id="toastContainer"
-  class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 max-w-sm pointer-events-none"
+  class="fixed bottom-6 right-6 z-50 flex flex-col gap-2 max-w-sm pointer-events-none"
 >
 </div>
 
@@ -14,33 +14,26 @@
 
     const { message, type } = event.detail;
     const toast = document.createElement('div');
-    toast.className = `pointer-events-auto flex items-center gap-3 px-4 py-3 rounded-xl shadow-xl border text-sm font-medium transition-all duration-300 transform translate-y-4 opacity-0 ${
-      type === 'success'
-        ? 'bg-slate-900 border-emerald-500/50 text-emerald-300'
-        : type === 'error'
-        ? 'bg-slate-900 border-rose-500/50 text-rose-300'
-        : 'bg-slate-900 border-slate-700 text-slate-200'
-    }`;
+    toast.className =
+      'pointer-events-auto flex items-center gap-3 px-5 py-2.5 rounded-full shadow-2xl border border-white/15 bg-black/90 backdrop-blur-xl text-white text-xs font-medium transition-all duration-300 transform translate-y-3 opacity-0';
 
     const iconSvg =
       type === 'success'
-        ? '<svg class="w-5 h-5 text-emerald-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>'
+        ? '<svg class="w-4 h-4 text-white shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>'
         : type === 'error'
-        ? '<svg class="w-5 h-5 text-rose-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>'
-        : '<svg class="w-5 h-5 text-sky-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>';
+        ? '<svg class="w-4 h-4 text-white/70 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>'
+        : '<svg class="w-4 h-4 text-white/70 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>';
 
     toast.innerHTML = `${iconSvg}<span>${message}</span>`;
     container.appendChild(toast);
 
-    // Animación de entrada
     requestAnimationFrame(() => {
-      toast.classList.remove('translate-y-4', 'opacity-0');
+      toast.classList.remove('translate-y-3', 'opacity-0');
     });
 
-    // Auto-destrucción
     setTimeout(() => {
       toast.classList.add('opacity-0', 'translate-y-2');
       setTimeout(() => toast.remove(), 300);
-    }, 3000);
+    }, 2800);
   }) as EventListener);
 </script>
