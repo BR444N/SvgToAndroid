@@ -1,8 +1,9 @@
 import type { ProcessedItemDto } from '../../application/dtos/ProcessedItemDto';
+import { I18nService } from '../i18n/I18nService';
 
 export class FileItemRenderer {
   /**
-   * Genera el elemento HTML para una tarjeta de archivo en blanco y negro con bordes redondeados.
+   * Genera el elemento HTML para una tarjeta de archivo en blanco y negro con bordes redondeados y soporte i18n.
    */
   public static renderCard(item: ProcessedItemDto, isCopied: boolean): HTMLElement {
     const card = document.createElement('div');
@@ -23,6 +24,7 @@ export class FileItemRenderer {
   }
 
   private static renderErrorCardHtml(item: ProcessedItemDto): string {
+    const i18n = I18nService.getInstance();
     return `
       <div class="p-5 flex items-center justify-between gap-4">
         <div class="flex items-center gap-3.5 min-w-0">
@@ -33,7 +35,7 @@ export class FileItemRenderer {
           </div>
           <div class="min-w-0">
             <h4 class="text-sm font-medium text-white truncate">${this.escapeHtml(item.originalName)}</h4>
-            <p class="text-xs text-white/40 mt-0.5 truncate">${this.escapeHtml(item.errorMessage || 'No se pudo procesar este archivo.')}</p>
+            <p class="text-xs text-white/40 mt-0.5 truncate">${this.escapeHtml(item.errorMessage || i18n.t('card.errorGeneric'))}</p>
           </div>
         </div>
 
@@ -42,7 +44,7 @@ export class FileItemRenderer {
           data-action="delete"
           data-id="${item.id}"
           class="p-2 rounded-full border border-white/10 bg-white/5 hover:bg-white/10 text-white/50 hover:text-white transition-colors cursor-pointer"
-          title="Eliminar de la lista"
+          title="${i18n.t('card.delete')}"
         >
           <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
             <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -53,6 +55,7 @@ export class FileItemRenderer {
   }
 
   private static renderSuccessCardHtml(item: ProcessedItemDto, isCopied: boolean): string {
+    const i18n = I18nService.getInstance();
     const svgFile = item.svgFile!;
     const vector = item.vectorDrawable!;
     const formattedSize = (svgFile.metadata.sizeBytes / 1024).toFixed(1) + ' KB';
@@ -68,7 +71,7 @@ export class FileItemRenderer {
               data-action="open-modal"
               data-id="${item.id}"
               class="group relative w-20 h-20 sm:w-24 sm:h-24 rounded-2xl bg-neutral-950 border border-white/10 hover:border-white/30 p-3 sm:p-3.5 flex items-center justify-center shrink-0 overflow-hidden shadow-inner cursor-zoom-in transition-all duration-200 hover:scale-[1.03] text-left"
-              title="Haz clic para inspeccionar detalles y ampliar con zoom"
+              title="${i18n.t('card.inspect')}"
             >
               <div class="w-full h-full flex items-center justify-center text-white pointer-events-none [&>svg]:max-w-full [&>svg]:max-h-full [&>svg]:w-auto [&>svg]:h-auto">
                 ${svgFile.sanitizedContent}
@@ -87,7 +90,7 @@ export class FileItemRenderer {
                   ${this.escapeHtml(vector.fileName)}
                 </span>
                 <span class="text-[11px] px-2.5 py-0.5 rounded-full bg-white/5 text-white/70 border border-white/10 font-mono">
-                  ${vector.options.widthDp}×${vector.options.heightDp} dp
+                  ${vector.options.widthDp}×${vector.options.heightDp} ${i18n.t('card.dp')}
                 </span>
               </div>
               <p class="text-xs text-white/40 mt-1.5 truncate">
@@ -108,12 +111,12 @@ export class FileItemRenderer {
                   ? 'bg-white text-black shadow-lg shadow-white/10'
                   : 'bg-white text-black hover:bg-neutral-200'
               }"
-              title="Copiar código XML"
+              title="${i18n.t('card.copy')}"
             >
               ${
                 isCopied
-                  ? `<svg class="w-3.5 h-3.5 stroke-[2.5]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" /></svg><span>¡Copiado!</span>`
-                  : `<svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" /></svg><span>Copiar</span>`
+                  ? `<svg class="w-3.5 h-3.5 stroke-[2.5]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" /></svg><span>${i18n.t('card.copied')}</span>`
+                  : `<svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" /></svg><span>${i18n.t('card.copy')}</span>`
               }
             </button>
 
@@ -123,12 +126,12 @@ export class FileItemRenderer {
               data-action="download"
               data-id="${item.id}"
               class="inline-flex items-center gap-1.5 px-4 py-2 rounded-full border border-white/15 bg-white/5 hover:bg-white/10 text-white text-xs font-medium transition-colors cursor-pointer"
-              title="Descargar este archivo XML"
+              title="${i18n.t('card.download')}"
             >
               <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
               </svg>
-              <span>Descargar</span>
+              <span>${i18n.t('card.download')}</span>
             </button>
 
             <!-- Botón Alternar Visor XML -->
@@ -137,7 +140,7 @@ export class FileItemRenderer {
               data-action="toggle-code"
               data-id="${item.id}"
               class="p-2 rounded-full border border-white/10 bg-white/5 hover:bg-white/10 text-white/70 hover:text-white transition-colors cursor-pointer"
-              title="Ver código XML"
+              title="${i18n.t('card.viewCode')}"
             >
               <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
@@ -150,7 +153,7 @@ export class FileItemRenderer {
               data-action="delete"
               data-id="${item.id}"
               class="p-2 rounded-full border border-white/10 bg-white/5 hover:bg-white/15 text-white/50 hover:text-white transition-all cursor-pointer"
-              title="Eliminar de la lista"
+              title="${i18n.t('card.delete')}"
             >
               <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />

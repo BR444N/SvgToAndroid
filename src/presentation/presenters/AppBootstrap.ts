@@ -1,10 +1,15 @@
 import { ConverterAppPresenter } from './ConverterAppPresenter';
 import { AppStateStore, type AppState } from '../state/AppStateStore';
 import { FileItemRenderer } from '../components/FileItemRenderer';
+import { I18nService, type SupportedLanguage } from '../i18n/I18nService';
 
 export function bootstrapApp(): void {
   const presenter = new ConverterAppPresenter();
   const store = AppStateStore.getInstance();
+  const i18n = I18nService.getInstance();
+
+  // Inicializar traducciones de inmediato según la preferencia en caché (por defecto inglés)
+  i18n.updateDomTranslations();
 
   // Elementos DOM principales
   const dropzone = document.getElementById('dropzone');
@@ -22,6 +27,11 @@ export function bootstrapApp(): void {
   const progressBar = document.getElementById('queueProgressBar');
   const floatingNavbar = document.getElementById('floatingNavbar');
 
+  // Elementos del selector de idioma (Dropdown)
+  const langDropdownBtn = document.getElementById('langDropdownBtn');
+  const langDropdownMenu = document.getElementById('langDropdownMenu');
+  const langOptions = document.querySelectorAll<HTMLElement>('.lang-option');
+
   // Elementos del Modal de Inspección con Zoom
   const previewModal = document.getElementById('previewModal');
   const previewModalCard = document.getElementById('previewModalCard');
@@ -37,7 +47,48 @@ export function bootstrapApp(): void {
   if (!dropzone || !fileInput || !filesListContainer) return;
 
   // ==========================================
-  // 1. Navbar Flotante: Ocultar al desplazarse hacia abajo
+  // 1. Selector de Idioma (Dropdown + Persistencia)
+  // ==========================================
+  function closeLangMenu(): void {
+    if (langDropdownMenu && !langDropdownMenu.classList.contains('hidden')) {
+      langDropdownMenu.classList.add('hidden');
+      langDropdownBtn?.setAttribute('aria-expanded', 'false');
+    }
+  }
+
+  langDropdownBtn?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    const isHidden = langDropdownMenu?.classList.toggle('hidden');
+    langDropdownBtn.setAttribute('aria-expanded', isHidden ? 'false' : 'true');
+  });
+
+  langOptions.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const selected = btn.getAttribute('data-lang') as SupportedLanguage | null;
+      if (selected && (selected === 'en' || selected === 'es')) {
+        i18n.setLanguage(selected);
+      }
+      closeLangMenu();
+    });
+  });
+
+  window.addEventListener('click', () => {
+    closeLangMenu();
+  });
+
+  // Re-renderizar tarjetas cuando el idioma cambie
+  window.addEventListener('app:language-changed', () => {
+    const currentState = store.getState();
+    filesListContainer.innerHTML = '';
+    for (const item of currentState.items) {
+      const isCopied = currentState.lastCopiedId === item.id;
+      const card = FileItemRenderer.renderCard(item, isCopied);
+      filesListContainer.appendChild(card);
+    }
+  });
+
+  // ==========================================
+  // 2. Navbar Flotante: Ocultar al desplazarse hacia abajo
   // ==========================================
   let lastScrollY = window.scrollY;
   let ticking = false;
@@ -49,11 +100,10 @@ export function bootstrapApp(): void {
 
         if (floatingNavbar) {
           if (currentScrollY > 70 && currentScrollY > lastScrollY) {
-            // Desplazamiento hacia abajo: ocultar navbar
             floatingNavbar.classList.add('-translate-y-28', 'opacity-0', 'pointer-events-none');
             floatingNavbar.classList.remove('translate-y-0', 'opacity-100');
+            closeLangMenu();
           } else {
-            // Desplazamiento hacia arriba o cerca del inicio: mostrar navbar
             floatingNavbar.classList.remove('-translate-y-28', 'opacity-0', 'pointer-events-none');
             floatingNavbar.classList.add('translate-y-0', 'opacity-100');
           }
@@ -67,7 +117,7 @@ export function bootstrapApp(): void {
   });
 
   // ==========================================
-  // 2. Lógica del Modal con Zoom (+, -, Reset)
+  // 3. Lógica del Modal con Zoom (+, -, Reset)
   // ==========================================
   let currentZoom = 1.0;
   const MIN_ZOOM = 0.3;
@@ -96,7 +146,7 @@ export function bootstrapApp(): void {
       modalSvgWrapper.innerHTML = item.svgFile.sanitizedContent;
     }
 
-    updateZoom(1.0); // Inicia en 100% (modo normal)
+    updateZoom(1.0);
 
     previewModal.classList.remove('hidden');
     requestAnimationFrame(() => {
@@ -120,12 +170,10 @@ export function bootstrapApp(): void {
     }, 200);
   }
 
-  // Controles de zoom
   btnZoomIn?.addEventListener('click', () => updateZoom(currentZoom + ZOOM_STEP));
   btnZoomOut?.addEventListener('click', () => updateZoom(currentZoom - ZOOM_STEP));
   btnResetZoom?.addEventListener('click', () => updateZoom(1.0));
 
-  // Zoom con rueda de ratón dentro del modal
   modalSvgWrapper?.parentElement?.addEventListener('wheel', (e) => {
     e.preventDefault();
     if (e.deltaY < 0) {
@@ -135,7 +183,6 @@ export function bootstrapApp(): void {
     }
   }, { passive: false });
 
-  // Cerrar modal
   btnCloseModal?.addEventListener('click', closePreviewModal);
 
   previewModal?.addEventListener('click', (e) => {
@@ -151,7 +198,7 @@ export function bootstrapApp(): void {
   });
 
   // ==========================================
-  // 3. Selección y Procesamiento de Archivos
+  // 4. Selección y Procesamiento de Archivos
   // ==========================================
   dropzone.addEventListener('click', () => fileInput.click());
 
@@ -181,13 +228,13 @@ export function bootstrapApp(): void {
   });
 
   // ==========================================
-  // 4. Acciones Globales
+  // 5. Acciones Globales
   // ==========================================
   btnExportZip?.addEventListener('click', () => presenter.handleExportAllZip());
   btnClearAll?.addEventListener('click', () => presenter.handleClearAll());
 
   // ==========================================
-  // 5. Delegación de eventos en las tarjetas
+  // 6. Delegación de eventos en las tarjetas
   // ==========================================
   filesListContainer.addEventListener('click', (e) => {
     const target = (e.target as HTMLElement).closest('[data-action]') as HTMLElement | null;
@@ -214,10 +261,9 @@ export function bootstrapApp(): void {
   });
 
   // ==========================================
-  // 6. Suscripción Reactiva al Store
+  // 7. Suscripción Reactiva al Store
   // ==========================================
   store.subscribe((state: AppState) => {
-    // Actualizar barra de progreso
     if (state.isProcessing && state.totalInQueue > 0) {
       progressContainer?.classList.remove('hidden');
       const percent = Math.round((state.processedCount / state.totalInQueue) * 100);
@@ -227,7 +273,6 @@ export function bootstrapApp(): void {
       if (progressBar) progressBar.style.width = '0%';
     }
 
-    // Actualizar contadores
     const totalCount = state.items.length;
     const successCount = state.items.filter((i) => i.status === 'success').length;
     const errorCount = state.items.filter((i) => i.status === 'error').length;
@@ -244,7 +289,6 @@ export function bootstrapApp(): void {
       errorBadgeContainer?.classList.remove('flex');
     }
 
-    // Mostrar/ocultar barra de acciones globales y estado vacío
     if (totalCount > 0) {
       globalActionsSection?.classList.remove('hidden');
       globalActionsSection?.classList.add('flex');
@@ -255,7 +299,6 @@ export function bootstrapApp(): void {
       emptyState?.classList.remove('hidden');
     }
 
-    // Renderizar tarjetas
     filesListContainer.innerHTML = '';
     for (const item of state.items) {
       const isCopied = state.lastCopiedId === item.id;

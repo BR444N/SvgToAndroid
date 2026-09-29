@@ -1,0 +1,60 @@
+{
+  "nav": {
+    "title": "SVG to Android",
+    "badge": "XML",
+    "subtitle": "Herramienta Vector Drawable",
+    "language": "Idioma",
+    "en": "English",
+    "es": "Español"
+  },
+  "hero": {
+    "title": "SVG to Android Vector",
+    "subtitle": "Convierte tus archivos vectoriales al formato XML de Android al instante."
+  },
+  "dropzone": {
+    "dragText": "Arrastra y suelta tus archivos SVG aquí",
+    "clickText": "o haz clic para explorar en tu equipo",
+    "processing": "Procesando archivos..."
+  },
+  "globalActions": {
+    "total": "Total:",
+    "ready": "Listos:",
+    "skipped": "Omitidos:",
+    "downloadAllZip": "Descargar Todos (.ZIP)",
+    "clearAll": "Limpiar"
+  },
+  "emptyState": {
+    "title": "Ningún archivo cargado",
+    "subtitle": "Arrastra tus iconos o gráficos en formato SVG para visualizarlos, copiar el código o descargarlos."
+  },
+  "card": {
+    "copy": "Copiar",
+    "copied": "¡Copiado!",
+    "download": "Descargar",
+    "viewCode": "Ver código XML",
+    "delete": "Eliminar de la lista",
+    "original": "Original:",
+    "dp": "dp",
+    "inspect": "Haz clic para inspeccionar detalles y ampliar con zoom",
+    "errorGeneric": "No se pudo procesar este archivo."
+  },
+  "modal": {
+    "title": "Vista Previa Extendida",
+    "close": "Cerrar (Esc)",
+    "zoomIn": "Acercar",
+    "zoomOut": "Alejar",
+    "reset": "Normal",
+    "copyCode": "Copiar XML"
+  },
+  "toasts": {
+    "codeCopied": "¡Código de \"{name}\" copiado!",
+    "clipboardError": "No se pudo acceder al portapapeles.",
+    "batchProcessed": "Se han procesado {count} archivo(s).",
+    "downloading": "Descargando {name}...",
+    "zipZipping": "Comprimiendo {count} archivos en ZIP...",
+    "zipReady": "¡Descarga ZIP iniciada!",
+    "zipEmpty": "No hay archivos convertidos disponibles para exportar.",
+    "listCleared": "Se han eliminado todos los archivos de la lista.",
+    "xmlNotFound": "No se encontró el XML a copiar."
+  }
+}

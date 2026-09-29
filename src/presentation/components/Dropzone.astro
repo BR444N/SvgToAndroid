@@ -1,5 +1,5 @@
 ---
-// Dropzone.astro: Zona de carga minimalista en blanco y negro con bordes redondeados y sin referencias de seguridad
+// Dropzone.astro: Zona de carga con soporte de internacionalización i18n
 ---
 <div class="w-full">
   <div
@@ -23,11 +23,11 @@
       </div>
 
       <div class="space-y-1.5">
-        <p class="text-base font-medium text-white">
-          Arrastra y suelta tus archivos <span class="font-semibold underline decoration-white/40 underline-offset-4">SVG</span> aquí
+        <p class="text-base font-medium text-white" data-i18n="dropzone.dragText">
+          Drag & drop your SVG files here
         </p>
-        <p class="text-xs sm:text-sm text-white/50">
-          o haz clic para explorar en tu equipo
+        <p class="text-xs sm:text-sm text-white/50" data-i18n="dropzone.clickText">
+          or click to browse from your device
         </p>
       </div>
     </div>

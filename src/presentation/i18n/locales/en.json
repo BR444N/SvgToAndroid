@@ -1,0 +1,60 @@
+{
+  "nav": {
+    "title": "SVG to Android",
+    "badge": "XML",
+    "subtitle": "Vector Drawable Tool",
+    "language": "Language",
+    "en": "English",
+    "es": "Español"
+  },
+  "hero": {
+    "title": "SVG to Android Vector",
+    "subtitle": "Convert your vector graphics into clean Android Vector Drawable XML instantly."
+  },
+  "dropzone": {
+    "dragText": "Drag & drop your SVG files here",
+    "clickText": "or click to browse from your device",
+    "processing": "Processing files..."
+  },
+  "globalActions": {
+    "total": "Total:",
+    "ready": "Ready:",
+    "skipped": "Skipped:",
+    "downloadAllZip": "Download All (.ZIP)",
+    "clearAll": "Clear"
+  },
+  "emptyState": {
+    "title": "No files loaded yet",
+    "subtitle": "Drag and drop your SVG icons or graphics to preview, copy code, or download."
+  },
+  "card": {
+    "copy": "Copy",
+    "copied": "Copied!",
+    "download": "Download",
+    "viewCode": "View XML code",
+    "delete": "Remove from list",
+    "original": "Original:",
+    "dp": "dp",
+    "inspect": "Click to inspect details and zoom",
+    "errorGeneric": "Could not process this file."
+  },
+  "modal": {
+    "title": "Extended Preview",
+    "close": "Close (Esc)",
+    "zoomIn": "Zoom In",
+    "zoomOut": "Zoom Out",
+    "reset": "Normal",
+    "copyCode": "Copy XML"
+  },
+  "toasts": {
+    "codeCopied": "Code for \"{name}\" copied!",
+    "clipboardError": "Could not access system clipboard.",
+    "batchProcessed": "{count} file(s) processed.",
+    "downloading": "Downloading {name}...",
+    "zipZipping": "Packaging {count} vectors into ZIP...",
+    "zipReady": "ZIP download started!",
+    "zipEmpty": "No converted files available to export.",
+    "listCleared": "All files removed from list.",
+    "xmlNotFound": "XML content not found."
+  }
+}
