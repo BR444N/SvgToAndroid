@@ -3,26 +3,32 @@
 @tailwind utilities;
 
 @layer base {
+  html {
+    background-color: #000000;
+  }
+
   body {
-    @apply bg-slate-950 text-slate-100 antialiased selection:bg-emerald-500/30 selection:text-emerald-200 min-h-screen flex flex-col font-sans;
+    background-color: #000000;
+    color: #FFFFFF;
+    @apply antialiased selection:bg-white selection:text-black min-h-screen flex flex-col font-sans;
   }
 }
 
-/* Scrollbar personalizado para los visores de código */
+/* Scrollbar sutil y minimalista */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 5px;
+  height: 5px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #090d16;
+  background: #000000;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #1e293b;
+  background: rgba(255, 255, 255, 0.15);
   border-radius: 9999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #334155;
+  background: rgba(255, 255, 255, 0.3);
 }
