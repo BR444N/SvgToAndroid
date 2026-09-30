@@ -56,5 +56,12 @@
     "zipEmpty": "No converted files available to export.",
     "listCleared": "All files removed from list.",
     "xmlNotFound": "XML content not found."
+  },
+  "footer": {
+    "craftedBy": "Crafted by",
+    "portfolio": "Portfolio",
+    "repository": "GitHub Repo",
+    "license": "MIT License",
+    "copyright": "Open source under MIT License."
   }
 }
